@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(psmv)
+library(srppp)
 
-test_check("psmv")
+test_check("srppp")

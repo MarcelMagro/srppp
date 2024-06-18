@@ -2,8 +2,8 @@
 .Rhistory
 .RData
 .Ruserdata
-psmv.rda
-psmv.Rcheck
+*.rda
+*.Rcheck
 inst/doc
 *.tar.gz
 vignettes/*_cache/*

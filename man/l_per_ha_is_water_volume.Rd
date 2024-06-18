@@ -14,7 +14,7 @@ l_per_ha_is_water_volume
 Use definitions where the rate in l/ha refers to the volume of the spraying solution
 }
 \examples{
-library(psmv)
+library(srppp)
 l_per_ha_is_water_volume
 }
 \seealso{

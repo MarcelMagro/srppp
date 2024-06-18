@@ -1,0 +1,6 @@
+ℹ Testing srppp
+✔ | F W  S  OK | Context
+✔ |          2 | use_rates
+
+══ Results ═════════════════════════════════════════════════════════════════════
+[ FAIL 0 | WARN 0 | SKIP 0 | PASS 2 ]

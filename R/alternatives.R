@@ -8,9 +8,9 @@
 #' A use is defined as a combination of an application area, a crop
 #' ('culture') and a pathogen ('pest').
 #'
-#' @param psmv A [psmv_dm] object.
+#' @param srppp A [srppp_dm] object.
 #' @param active_ingredients Character vector of active ingredient names that will be
-#' matched against the column 'substances_de' in the psmv table 'substances'.
+#' matched against the column 'substances_de' in the srppp table 'substances'.
 #' @param details Should a table of alternative uses with 'wNbr' 'use_nr' be returned?
 #' @param missing If this is set to TRUE, uses without alternative product registrations
 #' are listed.
@@ -24,20 +24,20 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' psmv_cur <- psmv_dm()
+#' srppp_cur <- srppp_dm()
 #'
 #' actives_de <- c("Lambda-Cyhalothrin", "Deltamethrin")
 #'
-#' alternative_products(psmv_cur, actives_de)
-#' alternative_products(psmv_cur, actives_de, missing = TRUE)
-#' alternative_products(psmv_cur, actives_de, details = TRUE)
-#' alternative_products(psmv_cur, actives_de, list = TRUE)
+#' alternative_products(srppp_cur, actives_de)
+#' alternative_products(srppp_cur, actives_de, missing = TRUE)
+#' alternative_products(srppp_cur, actives_de, details = TRUE)
+#' alternative_products(srppp_cur, actives_de, list = TRUE)
 #'
 #' # Example in Italian
 #' actives_it <- c("Lambda-Cialotrina", "Deltametrina")
-#' alternative_products(psmv_cur, actives_it, lang = "it")
+#' alternative_products(srppp_cur, actives_it, lang = "it")
 #' }
-alternative_products <- function(psmv, active_ingredients,
+alternative_products <- function(srppp, active_ingredients,
   details = FALSE, missing = FALSE, list = FALSE, lang = c("de", "fr", "it"))
 {
   lang = match.arg(lang)
@@ -45,19 +45,19 @@ alternative_products <- function(psmv, active_ingredients,
   selection_criteria = paste(c("application_area", "culture", "pest"), lang, sep = "_")
 
   # Select products from the PSM-V containing the active ingredients in question
-  affected_products <- psmv$substances |>
-    filter(psmv$substances[[substance_column]] %in% active_ingredients) |>
-    left_join(psmv$ingredients[c("pk", "pNbr")], by = "pk") |> # get P-Numbers
-    left_join(psmv$products, by = "pNbr") |>
+  affected_products <- srppp$substances |>
+    filter(srppp$substances[[substance_column]] %in% active_ingredients) |>
+    left_join(srppp$ingredients[c("pk", "pNbr")], by = "pk") |> # get P-Numbers
+    left_join(srppp$products, by = "pNbr") |>
     select(c("pNbr", "wNbr")) |>
     arrange(pick(all_of(c("pNbr", "wNbr"))))
 
-  affected_uses <- psmv$uses |>
+  affected_uses <- srppp$uses |>
     filter(wNbr %in% affected_products$wNbr)
 
   affected_cultures_x_pests <- affected_uses |>
-    left_join(psmv$cultures, by = c("wNbr", "use_nr"), relationship = "many-to-many") |>
-    left_join(psmv$pests, by = c("wNbr", "use_nr"), relationship = "many-to-many") |>
+    left_join(srppp$cultures, by = c("wNbr", "use_nr"), relationship = "many-to-many") |>
+    left_join(srppp$pests, by = c("wNbr", "use_nr"), relationship = "many-to-many") |>
     select(all_of(selection_criteria)) |>
     unique() |>
     arrange(pick(all_of(selection_criteria)))
@@ -65,14 +65,14 @@ alternative_products <- function(psmv, active_ingredients,
   return_columns <- c("pNbr", "wNbr", "use_nr", selection_criteria)
 
   # Select products without the active ingredients in question
-  alternative_product_candidates <- psmv$products |>
+  alternative_product_candidates <- srppp$products |>
     ungroup() |>
-    filter(!psmv$products$wNbr %in% affected_products$wNbr)
+    filter(!srppp$products$wNbr %in% affected_products$wNbr)
 
   alternative_product_candidate_uses <- alternative_product_candidates |>
-    left_join(psmv$uses, by = "wNbr", relationship = "many-to-many") |>
-    left_join(psmv$cultures, by = c("wNbr", "use_nr"), relationship = "many-to-many") |>
-    left_join(psmv$pests, by = c("wNbr", "use_nr"), relationship = "many-to-many") |>
+    left_join(srppp$uses, by = "wNbr", relationship = "many-to-many") |>
+    left_join(srppp$cultures, by = c("wNbr", "use_nr"), relationship = "many-to-many") |>
+    left_join(srppp$pests, by = c("wNbr", "use_nr"), relationship = "many-to-many") |>
     select(all_of(return_columns)) |>
     arrange(pick(all_of(return_columns)))
 

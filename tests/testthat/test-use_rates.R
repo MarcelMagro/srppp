@@ -1,7 +1,7 @@
 test_that("Use rates are correctly converted to g/ha", {
 
   # Halauxifen-methyl in Cerelex in arable crops, e.g. in the PSMV 2024
-  use_arable_one_rate_l_ha <- tibble(
+  use_arable_one_rate_l_ha <- tibble::tibble(
     wNbr = "7388", use_nr = 1L, substance_de = "Halauxifen-methyl", 
     application_area_de = "Feldbau",
     min_dosage = NA,
@@ -18,7 +18,7 @@ test_that("Use rates are correctly converted to g/ha", {
     4.725)
 
   # Seven uses of Alial containing Fosetyl
-  uses_fosetyl <- tibble(
+  uses_fosetyl <- tibble::tibble(
     wNbr = "6755",
     use_nr = c(1, 2, 3, 4, 5, 6, 7),
     application_area_de = c("Zierpflanzen", "Weinbau", "Obstbau", "Beerenbau", "Gemüsebau", "Gemüsebau", "Zierpflanzen"),

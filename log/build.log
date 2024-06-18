@@ -1,10 +1,10 @@
 * checking for file ‘./DESCRIPTION’ ... OK
-* preparing ‘psmv’:
+* preparing ‘srppp’:
 * checking DESCRIPTION meta-information ... OK
 * installing the package to build vignettes
 * creating vignettes ... OK
 * checking for LF line-endings in source and make files and shell scripts
 * checking for empty or unneeded directories
 Omitted ‘LazyData’ and ‘LazyDataCompression’ from DESCRIPTION
-* building ‘psmv_0.3.3.tar.gz’
+* building ‘srppp_0.3.4.tar.gz’
 

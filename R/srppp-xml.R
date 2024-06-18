@@ -11,57 +11,57 @@ utils::globalVariables(c("id", "name", "pk", "wNbr", "wGrp", "pNbr", "use_nr",
 #'
 #' @param from A specification of the way to retrieve the XML
 #' @param \dots Unused argument introduced to facilitate future extensions
-#' @return An object inheriting from 'psmv_xml', 'xml_document', 'xml_node'
+#' @return An object inheriting from 'srppp_xml', 'xml_document', 'xml_node'
 #' @export
-psmv_xml_get <- function(from, ...)
+srppp_xml_get <- function(from, ...)
 {
-  UseMethod("psmv_xml_get")
+  UseMethod("srppp_xml_get")
 }
 
-#' @rdname psmv_xml_get
-#' @export
-#' @examples
-#' # The current PSMV as available from the FOAG website
-#' psmv_cur <- psmv_xml_get()
-psmv_xml_get.NULL <- function(from, ...)
-{
-  from <- psmv_xml_url
-  path <- tempfile(fileext = "zip")
-  download.file(from, path)
-
-  psmv_xml_get_from_path(path, from)
-}
-
-#' @rdname psmv_xml_get
+#' @rdname srppp_xml_get
 #' @export
 #' @examples
 #' # The current PSMV as available from the FOAG website
-#' psmv_cur <- psmv_xml_get(psmv_xml_url)
-psmv_xml_get.character <- function(from, ...)
+#' srppp_cur <- srppp_xml_get()
+srppp_xml_get.NULL <- function(from, ...)
+{
+  from <- srppp_xml_url
+  path <- tempfile(fileext = "zip")
+  download.file(from, path)
+
+  srppp_xml_get_from_path(path, from)
+}
+
+#' @rdname srppp_xml_get
+#' @export
+#' @examples
+#' # The current PSMV as available from the FOAG website
+#' srppp_cur <- srppp_xml_get(srppp_xml_url)
+srppp_xml_get.character <- function(from, ...)
 {
   path <- tempfile(fileext = "zip")
   download.file(from, path)
 
-  psmv_xml_get_from_path(path, from)
+  srppp_xml_get_from_path(path, from)
 }
 
-#' @rdname psmv_xml_get
+#' @rdname srppp_xml_get
 #' @param path A path to a zipped PSMV XML file
 #' @export
-psmv_xml_get_from_path <- function(path, from) {
+srppp_xml_get_from_path <- function(path, from) {
   zip_contents <- utils::unzip(path, list = TRUE)
   xml_filename <- grep("PublicationData_20.._.._...xml",
     zip_contents$Name, value = TRUE)
   xml_con <- unz(path, xml_filename)
   ret <- read_xml(xml_con)
-  class(ret) <- c("psmv_xml", "xml_document", "xml_node")
+  class(ret) <- c("srppp_xml", "xml_document", "xml_node")
   attr(ret, "from") <- as.character(from)
   return(ret)
 }
 
 #' Get Products from an XML version of the PSMV
 #'
-#' @param psmv_xml An object as returned by 'psmv_xml_get'
+#' @param srppp_xml An object as returned by 'srppp_xml_get'
 #' @param verbose Should we give some feedback?
 #' @param remove_duplicates Should duplicates based on wNbrs be removed? If set
 #' to 'TRUE', one of the two entries with identical wNbrs is removed, based on
@@ -79,11 +79,11 @@ psmv_xml_get_from_path <- function(path, from) {
 #' @export
 #' @examples
 #' # Get current list of products
-#' psmv_xml_get_products()
-psmv_xml_get_products <- function(psmv_xml = psmv_xml_get(), verbose = TRUE,
+#' srppp_xml_get_products()
+srppp_xml_get_products <- function(srppp_xml = srppp_xml_get(), verbose = TRUE,
   remove_duplicates = TRUE)
 {
-  product_nodeset <- xml_find_all(psmv_xml, "Products/Product")
+  product_nodeset <- xml_find_all(srppp_xml, "Products/Product")
   product_attribute_names <- names(xml_attrs(product_nodeset[[1]]))
   products <- product_nodeset |>
     xml_attrs() |>
@@ -162,16 +162,16 @@ psmv_xml_get_products <- function(psmv_xml = psmv_xml_get(), verbose = TRUE,
 
 #' Get Parallel Imports from an XML version of the PSMV
 #'
-#' @inheritParams psmv_xml_get_products
+#' @inheritParams srppp_xml_get_products
 #' @return A [tibble] with a row for each parallel import section
 #' in the XML file.
 #' @export
 #' @examples
 #' # Get current list of parallel_imports
-#' psmv_xml_get_parallel_imports()
-psmv_xml_get_parallel_imports <- function(psmv_xml = psmv_xml_get())
+#' srppp_xml_get_parallel_imports()
+srppp_xml_get_parallel_imports <- function(srppp_xml = srppp_xml_get())
 {
-  pi_nodeset <- xml_find_all(psmv_xml, "Parallelimports/Parallelimport")
+  pi_nodeset <- xml_find_all(srppp_xml, "Parallelimports/Parallelimport")
   pi_attribute_names <- names(xml_attrs(pi_nodeset[[1]]))
   pis <- pi_nodeset |>
     xml_attrs() |>
@@ -181,7 +181,7 @@ psmv_xml_get_parallel_imports <- function(psmv_xml = psmv_xml_get())
     tibble::as_tibble() |>
     arrange(wNbr)
 
-  ph_nodes <- xml_find_all(psmv_xml,
+  ph_nodes <- xml_find_all(srppp_xml,
     "Parallelimports/Parallelimport/ProductInformation/PermissionHolderKey")
 
   ph_key_matrix <- t(sapply(ph_nodes, function(node) {
@@ -205,12 +205,12 @@ psmv_xml_get_parallel_imports <- function(psmv_xml = psmv_xml_get())
 
 #' Get substances from an XML version of the PSMV
 #'
-#' @param psmv_xml An object as returned by 'psmv_xml_get'
+#' @param srppp_xml An object as returned by 'srppp_xml_get'
 #' @export
 #' @examples
-#' psmv_xml_get_substances()
-psmv_xml_get_substances <- function(psmv_xml = psmv_xml_get()) {
-  substance_nodeset <- xml_find_all(psmv_xml, "MetaData[@name='Substance']/Detail")
+#' srppp_xml_get_substances()
+srppp_xml_get_substances <- function(srppp_xml = srppp_xml_get()) {
+  substance_nodeset <- xml_find_all(srppp_xml, "MetaData[@name='Substance']/Detail")
 
   sub_desc <- t(sapply(substance_nodeset, function(sub_node) {
     c(xml_attr(sub_node, "primaryKey"),
@@ -230,13 +230,13 @@ psmv_xml_get_substances <- function(psmv_xml = psmv_xml_get()) {
 
 #' Get ingredients for all products described in an XML version of the PSMV
 #'
-#' @param psmv_xml An object as returned by 'psmv_xml_get'
+#' @param srppp_xml An object as returned by 'srppp_xml_get'
 #' @export
 #' @examples
-#' psmv_xml_get_ingredients()
-psmv_xml_get_ingredients <- function(psmv_xml = psmv_xml_get())
+#' srppp_xml_get_ingredients()
+srppp_xml_get_ingredients <- function(srppp_xml = srppp_xml_get())
 {
-  ingredient_nodeset <- xml_find_all(psmv_xml,
+  ingredient_nodeset <- xml_find_all(srppp_xml,
     "Products/Product/ProductInformation/Ingredient")
 
   get_ingredient_map <- function(ingredient_node) {
@@ -262,7 +262,7 @@ psmv_xml_get_ingredients <- function(psmv_xml = psmv_xml_get())
     mutate(add_txt_pk = as.integer(add_txt_pk)) |>
     mutate(pk = as.integer(pk))
 
-  ingredient_descriptions <- psmv_xml |>
+  ingredient_descriptions <- srppp_xml |>
     xml_find_all(paste0("MetaData[@name='IngredientAdditionalText']/Detail")) |>
     sapply(get_descriptions, code = FALSE) |> t() |>
     tibble::as_tibble() |>
@@ -291,13 +291,13 @@ psmv_xml_get_ingredients <- function(psmv_xml = psmv_xml_get())
 
 #' Define use identification numbers in a PSMV read in from an XML file
 #'
-#' @param psmv_xml An object as returned by 'psmv_xml_get'
-#' @return An psmv_xml object with use_nr added as an attribute of 'Indication' nodes.
+#' @param srppp_xml An object as returned by 'srppp_xml_get'
+#' @return An srppp_xml object with use_nr added as an attribute of 'Indication' nodes.
 #' @export
 #' @examples
-#' psmv_xml_define_use_numbers()
-psmv_xml_define_use_numbers <- function(psmv_xml = psmv_xml_get()) {
-  use_nodeset <- xml_find_all(psmv_xml, "Products/Product/ProductInformation/Indication")
+#' srppp_xml_define_use_numbers()
+srppp_xml_define_use_numbers <- function(srppp_xml = srppp_xml_get()) {
+  use_nodeset <- xml_find_all(srppp_xml, "Products/Product/ProductInformation/Indication")
 
   uses <- tibble::tibble(wNbr = sapply(use_nodeset, get_grandparent_wNbr)) |>
     group_by(wNbr) |>
@@ -305,23 +305,23 @@ psmv_xml_define_use_numbers <- function(psmv_xml = psmv_xml_get()) {
 
   xml_attr(use_nodeset, "use_nr") <- uses$use_nr
 
-  return(psmv_xml)
+  return(srppp_xml)
 }
 
 #' Get uses ('indications') for all products described in an XML version of the PSMV
 #'
-#' @param psmv_xml An object as returned by [psmv_xml_get] with use numbers
-#' defined by [psmv_xml_define_use_numbers]
+#' @param srppp_xml An object as returned by [srppp_xml_get] with use numbers
+#' defined by [srppp_xml_define_use_numbers]
 #' @export
 #' @examples
-#' psmv_xml <- psmv_xml_get()
-#' psmv_xml <- psmv_xml_define_use_numbers(psmv_xml)
-#' psmv_xml_get_uses(psmv_xml)
-psmv_xml_get_uses <- function(psmv_xml = psmv_xml_get()) {
-  use_nodeset <- xml_find_all(psmv_xml, "Products/Product/ProductInformation/Indication")
+#' srppp_xml <- srppp_xml_get()
+#' srppp_xml <- srppp_xml_define_use_numbers(srppp_xml)
+#' srppp_xml_get_uses(srppp_xml)
+srppp_xml_get_uses <- function(srppp_xml = srppp_xml_get()) {
+  use_nodeset <- xml_find_all(srppp_xml, "Products/Product/ProductInformation/Indication")
 
   if (is.na(xml_attr(use_nodeset[[1]], "use_nr"))) {
-    stop("You need to add use numbers with psmv_xml_use_numbers() first")
+    stop("You need to add use numbers with srppp_xml_use_numbers() first")
   }
 
   get_use <- function(node) {
@@ -348,14 +348,14 @@ psmv_xml_get_uses <- function(psmv_xml = psmv_xml_get()) {
     return(ret)
   }
 
-  rate_unit_descriptions <- description_table(psmv_xml, "Measure") |>
+  rate_unit_descriptions <- description_table(srppp_xml, "Measure") |>
     rename(units_de = de, units_fr = fr) |>
     rename(units_it = it, units_en = en) |>
     rename(units_pk = desc_pk) |>
     mutate(units_pk = as.integer(units_pk)) |>
     arrange(units_pk)
 
-  time_units_nodeset <- xml_find_all(psmv_xml, "Products/Product/ProductInformation/Indication/TimeMeasure")
+  time_units_nodeset <- xml_find_all(srppp_xml, "Products/Product/ProductInformation/Indication/TimeMeasure")
   get_time_units <- function(node) {
     wNbr <- xml_attr(xml_parent(xml_parent(xml_parent((node)))), "wNbr")
     use_nr <- xml_attr(xml_parent(node), "use_nr")
@@ -368,7 +368,7 @@ psmv_xml_get_uses <- function(psmv_xml = psmv_xml_get()) {
     tibble::as_tibble() |>
     mutate_at(c("use_nr", "time_units_pk"), as.integer)
 
-  time_unit_descriptions <- psmv_xml |>
+  time_unit_descriptions <- srppp_xml |>
     xml_find_all(paste0("MetaData[@name='TimeMeasure']/Detail")) |>
     sapply(get_descriptions, code = FALSE) |> t() |>
     tibble::as_tibble() |>
@@ -395,7 +395,7 @@ psmv_xml_get_uses <- function(psmv_xml = psmv_xml_get()) {
 
 #' Create a dm object from an XML version of the PSMV
 #'
-#' @inheritParams psmv_xml_get
+#' @inheritParams srppp_xml_get
 #' @param remove_duplicates Should duplicates based on wNbrs be removed?
 #' @return A [dm] object with tables linked by foreign keys
 #' pointing to primary keys, i.e. with referential integrity.
@@ -404,31 +404,31 @@ psmv_xml_get_uses <- function(psmv_xml = psmv_xml_get()) {
 #' \dontrun{
 #' library(dm)
 #'
-#' psmv_cur <- psmv_dm()
-#' dm_examine_constraints(psmv_cur)
-#' dm_draw(psmv_cur)
+#' srppp_cur <- srppp_dm()
+#' dm_examine_constraints(srppp_cur)
+#' dm_draw(srppp_cur)
 #'
 #' # Show some information for products named 'Boxer'
-#' psmv_cur |>
+#' srppp_cur |>
 #'   dm_filter(products = (name == "Boxer")) |>
 #'   dm_nrow()
 #' }
-psmv_dm <- function(from = psmv_xml_url, remove_duplicates = TRUE) {
+srppp_dm <- function(from = srppp_xml_url, remove_duplicates = TRUE) {
 
-  psmv_xml <- psmv_xml_get(from)
+  srppp_xml <- srppp_xml_get(from)
 
   # Tables of products and associated information
   # Duplicates were already removed from the XML, if requested
-  products <- psmv_xml_get_products(psmv_xml, remove_duplicates = remove_duplicates)
-  parallel_imports <- psmv_xml_get_parallel_imports(psmv_xml)
+  products <- srppp_xml_get_products(srppp_xml, remove_duplicates = remove_duplicates)
+  parallel_imports <- srppp_xml_get_parallel_imports(srppp_xml)
 
-  product_information_table <- function(psmv_xml, tag_name, prefix = tag_name, code = FALSE) {
-    descriptions <- description_table(psmv_xml, tag_name, code = code)
+  product_information_table <- function(srppp_xml, tag_name, prefix = tag_name, code = FALSE) {
+    descriptions <- description_table(srppp_xml, tag_name, code = code)
 
     if (identical(descriptions, NA)) {
       ret <- tibble::tibble(wNbr = character(0))
     } else {
-      product_information_nodes <- xml_find_all(psmv_xml,
+      product_information_nodes <- xml_find_all(srppp_xml,
         paste0("Products/Product/ProductInformation/", tag_name))
 
       ret <- tibble::tibble(
@@ -445,29 +445,29 @@ psmv_dm <- function(from = psmv_xml_url, remove_duplicates = TRUE) {
   }
 
   product_categories <- unique( # ProductCategory tags are often duplicated in the XML files
-    product_information_table(psmv_xml, "ProductCategory", prefix = "category"))
-  formulation_codes <- product_information_table(psmv_xml, "FormulationCode", prefix = "formulation")
-  danger_symbols <- product_information_table(psmv_xml, "DangerSymbol", code = TRUE)
-  signal_words <- product_information_table(psmv_xml, "SignalWords", prefix = "signal")
-  CodeS <- product_information_table(psmv_xml, "CodeS")
-  CodeR <- product_information_table(psmv_xml, "CodeR")
+    product_information_table(srppp_xml, "ProductCategory", prefix = "category"))
+  formulation_codes <- product_information_table(srppp_xml, "FormulationCode", prefix = "formulation")
+  danger_symbols <- product_information_table(srppp_xml, "DangerSymbol", code = TRUE)
+  signal_words <- product_information_table(srppp_xml, "SignalWords", prefix = "signal")
+  CodeS <- product_information_table(srppp_xml, "CodeS")
+  CodeR <- product_information_table(srppp_xml, "CodeR")
   # Permission holder was skipped, as we will probably not need this information
 
   # Tables of product ingredients and their concentrations
-  substances <- psmv_xml_get_substances(psmv_xml)
-  ingredients_no_pNbr <- psmv_xml_get_ingredients(psmv_xml)
+  substances <- srppp_xml_get_substances(srppp_xml)
+  ingredients_no_pNbr <- srppp_xml_get_ingredients(srppp_xml)
   ingredients <- ingredients_no_pNbr |>
     left_join(products[c("wNbr", "pNbr")], by = "wNbr") |>
     select(pNbr, pk, type, percent, g_per_L, ingredient_de, ingredient_fr, ingredient_it)
 
   # Define use IDs (attribute 'use_nr' in the XML tree)
-  psmv_xml <- psmv_xml_define_use_numbers(psmv_xml)
+  srppp_xml <- srppp_xml_define_use_numbers(srppp_xml)
 
-  indication_information_table <- function(psmv_xml,
+  indication_information_table <- function(srppp_xml,
     tag_name, additional_text = FALSE, type = FALSE)
   {
 
-    indication_information_nodes <- xml_find_all(psmv_xml,
+    indication_information_nodes <- xml_find_all(srppp_xml,
       paste0("Products/Product/ProductInformation/Indication/", tag_name))
 
     ret <- tibble::tibble(
@@ -489,17 +489,17 @@ psmv_dm <- function(from = psmv_xml_url, remove_duplicates = TRUE) {
     return(ret)
   }
 
-  application_area_descriptions <- description_table(psmv_xml, "ApplicationArea")
-  application_areas <- indication_information_table(psmv_xml, "ApplicationArea") |>
+  application_area_descriptions <- description_table(srppp_xml, "ApplicationArea")
+  application_areas <- indication_information_table(srppp_xml, "ApplicationArea") |>
     left_join(application_area_descriptions, by = "desc_pk") |>
     rename(application_area_de = de, application_area_fr = fr) |>
     rename(application_area_it = it, application_area_en = en) |>
     select(-desc_pk)
 
   # Table of uses ('indications') and associated information tables
-  uses <- psmv_xml_get_uses(psmv_xml)
+  uses <- srppp_xml_get_uses(srppp_xml)
 
-  uses <- psmv_xml_get_uses(psmv_xml) |>
+  uses <- srppp_xml_get_uses(srppp_xml) |>
     left_join(application_areas, by = join_by(wNbr, use_nr))
 
   # Check that we have exactly one application area per use
@@ -512,25 +512,25 @@ psmv_dm <- function(from = psmv_xml_url, remove_duplicates = TRUE) {
     cli::cli_abort("Assumption of 1 application area per use is violated")
   }
 
-  application_comment_descriptions <- description_table(psmv_xml, "ApplicationComment")
-  application_comments <- indication_information_table(psmv_xml, "ApplicationComment") |>
+  application_comment_descriptions <- description_table(srppp_xml, "ApplicationComment")
+  application_comments <- indication_information_table(srppp_xml, "ApplicationComment") |>
     left_join(application_comment_descriptions, by = "desc_pk") |>
     rename(application_comment_de = de, application_comment_fr = fr) |>
     rename(application_comment_it = it, application_comment_en = en) |>
     select(-desc_pk)
 
   # Sometimes we have one or more specific culture form(s) in the use definition
-  culture_form_descriptions <- description_table(psmv_xml, "CultureForm")
-  culture_forms <- indication_information_table(psmv_xml, "CultureForm") |>
+  culture_form_descriptions <- description_table(srppp_xml, "CultureForm")
+  culture_forms <- indication_information_table(srppp_xml, "CultureForm") |>
     left_join(culture_form_descriptions, by = "desc_pk") |>
     rename(culture_form_de = de, culture_form_fr = fr) |>
     rename(culture_form_it = it, culture_form_en = en) |>
     select(-desc_pk)
 
   # In the culture descriptions, links to parent cultures are filtered out
-  culture_descriptions <- description_table(psmv_xml, "Culture")
-  culture_additional_texts <- description_table(psmv_xml, "CultureAdditionalText")
-  cultures <- indication_information_table(psmv_xml, "Culture", additional_text = TRUE) |>
+  culture_descriptions <- description_table(srppp_xml, "Culture")
+  culture_additional_texts <- description_table(srppp_xml, "CultureAdditionalText")
+  cultures <- indication_information_table(srppp_xml, "Culture", additional_text = TRUE) |>
     left_join(culture_descriptions, by = "desc_pk") |>
     rename(culture_de = de, culture_fr = fr) |>
     rename(culture_it = it, culture_en = en) |>
@@ -540,9 +540,9 @@ psmv_dm <- function(from = psmv_xml_url, remove_duplicates = TRUE) {
     select(-desc_pk, -add_txt_pk) |>
     arrange(wNbr, use_nr)
 
-  pest_descriptions <- description_table(psmv_xml, "Pest", latin = TRUE)
-  pest_additional_texts <- description_table(psmv_xml, "PestAdditionalText")
-  pests <- indication_information_table(psmv_xml, "Pest",
+  pest_descriptions <- description_table(srppp_xml, "Pest", latin = TRUE)
+  pest_additional_texts <- description_table(srppp_xml, "PestAdditionalText")
+  pests <- indication_information_table(srppp_xml, "Pest",
     additional_text = TRUE, type = TRUE) |>
     left_join(pest_descriptions, by = "desc_pk") |>
     rename(pest_de = de, pest_fr = fr) |>
@@ -553,15 +553,15 @@ psmv_dm <- function(from = psmv_xml_url, remove_duplicates = TRUE) {
     select(-desc_pk, -add_txt_pk) |>
     arrange(wNbr, use_nr)
 
-  obligation_descriptions <- description_table(psmv_xml, "Obligation", code = TRUE)
-  obligations <- indication_information_table(psmv_xml, "Obligation") |>
+  obligation_descriptions <- description_table(srppp_xml, "Obligation", code = TRUE)
+  obligations <- indication_information_table(srppp_xml, "Obligation") |>
     left_join(obligation_descriptions, by = "desc_pk") |>
     rename(obligation_de = de, obligation_fr = fr) |>
     rename(obligation_it = it, obligation_en = en) |>
     select(-desc_pk) |>
     arrange(wNbr, use_nr)
 
-  psmv_dm <- dm(products,
+  srppp_dm <- dm(products,
     product_categories, formulation_codes,
     parallel_imports,
     danger_symbols, CodeS, CodeR, signal_words,
@@ -591,17 +591,17 @@ psmv_dm <- function(from = psmv_xml_url, remove_duplicates = TRUE) {
     dm_add_fk(obligations, c(wNbr, use_nr), uses) |>
     dm_add_fk(parallel_imports, wNbr, products)
 
-    attr(psmv_dm, "from") <- attr(psmv_xml, "from")
-    class(psmv_dm) <- c("psmv_dm", "dm")
-    return(psmv_dm)
+    attr(srppp_dm, "from") <- attr(srppp_xml, "from")
+    class(srppp_dm) <- c("srppp_dm", "dm")
+    return(srppp_dm)
 }
 
-#' @rdname psmv_dm
-#' @param x A [psmv_dm] object
+#' @rdname srppp_dm
+#' @param x A [srppp_dm] object
 #' @param \dots Not used
 #' @export
-print.psmv_dm <- function(x, ...) {
-  cat("<psmv_dm> object from:", attr(x, "from"), "\n")
+print.srppp_dm <- function(x, ...) {
+  cat("<srppp_dm> object from:", attr(x, "from"), "\n")
   dm::dm_nrow(x)
 }
 
@@ -609,7 +609,7 @@ print.psmv_dm <- function(x, ...) {
 #'
 #' @param names The product names that should be cleaned from comments
 #' @export
-psmv_xml_clean_product_names <- function(names) {
+srppp_xml_clean_product_names <- function(names) {
   names |>
     trimws() |>
     stringr::str_remove(" \\(Bew. suspendiert.*\\)$") |>
@@ -653,10 +653,10 @@ get_use_nr <- function(node) {
 
 #' Get a table of descriptions for a certain Meta Information Tag
 #' @keywords internal
-description_table <- function(psmv_xml, tag_name, code = FALSE, latin = FALSE) {
+description_table <- function(srppp_xml, tag_name, code = FALSE, latin = FALSE) {
 
   # Find nodes and apply the function
-  nodes <- psmv_xml |>
+  nodes <- srppp_xml |>
     xml_find_all(paste0("MetaData[@name='", tag_name, "']/Detail"))
 
   if (length(nodes) > 0) {

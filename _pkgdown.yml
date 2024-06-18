@@ -2,25 +2,25 @@ template:
   bootstrap: 5
 
 reference:
-  - title: A simple entity relationship model for a PSMV
+  - title: A simple entity relationship model for the SRPPP
     contents:
-      - psmv_dm
-  - title: Functions for working with XML versions of the PSMV
+      - srppp_dm
+  - title: Functions for working with XML versions of the SRPPP
     contents:
       - alternative_products
       - application_rate_g_per_ha
-  - title: Data objects for working with XML versions of the PSMV
+  - title: Data objects for working with XML versions of the SRPPP
     contents:
-      - psmv_xml_url
+      - srppp_xml_url
       - units_convertible_to_g_per_ha
   - title: Helper functions mainly used internally
     contents:
-      - psmv_xml_get
-      - psmv_xml_get_products
-      - psmv_xml_get_substances
-      - psmv_xml_get_ingredients
-      - psmv_xml_get_uses
-      - psmv_xml_define_use_numbers
-      - psmv_xml_clean_product_names
-      - psmv_xml_get_parallel_imports
+      - srppp_xml_get
+      - srppp_xml_get_products
+      - srppp_xml_get_substances
+      - srppp_xml_get_ingredients
+      - srppp_xml_get_uses
+      - srppp_xml_define_use_numbers
+      - srppp_xml_clean_product_names
+      - srppp_xml_get_parallel_imports
       - l_per_ha_is_water_volume

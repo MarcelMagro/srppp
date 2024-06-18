@@ -1,9 +1,9 @@
-# psmv - R package to deal with PSMV data obtained from XML dumps
+# srppp - R package to deal with XML dumps of the Swiss Register of Plant Protection Products
 
 ## Description
 
 Functions to generate data objects from XML versions of the Swiss
-Register of Plant Protection Products 'PSMV'. An online version of the
+Register of Plant Protection Products (SRPPP). An online version of the
 register can be accessed at <https://www.psm.admin.ch/de/produkte>. There is no
 guarantee of correspondence of the data read in using this package with that
 online version, or with the original registration documents.  Also, the
@@ -16,7 +16,7 @@ this package.
 You can clone the project via ssh using the URL
 
 ```
-git@gitlab.agsad.admin.ch:psmwb/psmv.git
+git@gitlab.agsad.admin.ch:psmwb/srppp.git
 ```
 
 Within RStudio, you can then install the package using the menu 'Build' and 
@@ -24,4 +24,4 @@ the submenu item 'Install Package'.
 
 ## Documentation
 
-Please visit the [Documentation page](https://psmwb.pages.agsad.admin.ch/psmv/)!
+Please visit the [Documentation page](https://psmwb.pages.agsad.admin.ch/srppp/)!

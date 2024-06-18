@@ -1,3 +1,7 @@
+## version 0.3.4
+
+- Rename the package from 'psmv' to 'srppp'
+
 ## version 0.3.3
 
 ### Format changes

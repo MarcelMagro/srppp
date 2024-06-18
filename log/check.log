@@ -1,4 +1,4 @@
-* using log directory ‘/home/agsad.admin.ch/f80868656/projects/psmv/psmv.Rcheck’
+* using log directory ‘/home/agsad.admin.ch/f80868656/projects/srppp/srppp.Rcheck’
 * using R version 4.4.0 (2024-04-24)
 * using platform: x86_64-pc-linux-gnu
 * R was compiled by
@@ -7,9 +7,9 @@
 * running under: Ubuntu 22.04.4 LTS
 * using session charset: UTF-8
 * using options ‘--no-tests --as-cran’
-* checking for file ‘psmv/DESCRIPTION’ ... OK
+* checking for file ‘srppp/DESCRIPTION’ ... OK
 * checking extension type ... Package
-* this is package ‘psmv’ version ‘0.3.3’
+* this is package ‘srppp’ version ‘0.3.4’
 * package encoding: UTF-8
 * checking CRAN incoming feasibility ... Note_to_CRAN_maintainers
 Maintainer: ‘Johannes Ranke <johannes.ranke@agroscope.admin.ch>’
@@ -21,7 +21,7 @@ Maintainer: ‘Johannes Ranke <johannes.ranke@agroscope.admin.ch>’
 * checking for hidden files and directories ... OK
 * checking for portable file names ... OK
 * checking for sufficient/correct file permissions ... OK
-* checking whether package ‘psmv’ can be installed ... OK
+* checking whether package ‘srppp’ can be installed ... OK
 * checking installed package size ... OK
 * checking package directory ... OK
 * checking for future file timestamps ... OK
@@ -57,12 +57,12 @@ Files ‘README.md’ or ‘NEWS.md’ cannot be checked without ‘pandoc’ be
 * checking for unstated dependencies in examples ... OK
 * checking installed files from ‘inst/doc’ ... OK
 * checking files in ‘vignettes’ ... OK
-* checking examples ... [11s/13s] OK
+* checking examples ... [11s/15s] OK
 * checking for unstated dependencies in ‘tests’ ... OK
 * checking tests ... SKIPPED
 * checking for unstated dependencies in vignettes ... OK
 * checking package vignettes ... OK
-* checking re-building of vignette outputs ... [16s/16s] OK
+* checking re-building of vignette outputs ... [15s/17s] OK
 * checking PDF version of manual ... OK
 * checking HTML version of manual ... NOTE
 Skipping checking HTML validation: no command 'tidy' found
@@ -72,6 +72,6 @@ Skipping checking HTML validation: no command 'tidy' found
 
 Status: 2 NOTEs
 See
-  ‘/home/agsad.admin.ch/f80868656/projects/psmv/psmv.Rcheck/00check.log’
+  ‘/home/agsad.admin.ch/f80868656/projects/srppp/srppp.Rcheck/00check.log’
 for details.
 

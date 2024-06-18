@@ -15,8 +15,8 @@ application_rate_g_per_ha(
 \arguments{
 \item{product_uses}{A tibble containing the columns 'wNbr', 'use_nr',
 'application_area_de', 'min_dosage', 'max_dosage', 'min_rate', 'max_rate',
-from the 'uses' table in a \link{psmv_dm} object, as well as the columns
-'percent' and 'g_per_L' from the 'ingredients' table in a \link{psmv_dm} object.}
+from the 'uses' table in a \link{srppp_dm} object, as well as the columns
+'percent' and 'g_per_L' from the 'ingredients' table in a \link{srppp_dm} object.}
 
 \item{aggregation}{How to represent a range if present, e.g. "max" (default)
 or "mean".}
@@ -53,18 +53,18 @@ areas in Switzerland.
 }
 \examples{
 \dontrun{
-library(psmv)
+library(srppp)
 library(dplyr)
 library(dm)
-psmv_cur <- psmv_dm()
+srppp_cur <- srppp_dm()
 
-product_uses_with_ingredients <- psmv_cur |>
+product_uses_with_ingredients <- srppp_cur |>
   dm_filter(substances =
     (substance_de \%in\% c("Halauxifen-methyl", "Kupfer (als Kalkpr\u00E4parat)"))) |>
   dm_flatten_to_tbl(uses, products) |>
-  left_join(psmv_cur$ingredients, by = join_by(wNbr),
+  left_join(srppp_cur$ingredients, by = join_by(wNbr),
     relationship = "many-to-many") |>
-  left_join(psmv_cur$substances, by = join_by(pk)) |>
+  left_join(srppp_cur$substances, by = join_by(pk)) |>
   select(wNbr, name, use_nr,
     min_dosage, max_dosage, min_rate, max_rate, units_de,
     application_area_de,

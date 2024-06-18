@@ -1,5 +1,5 @@
 ---
-title: Statistics on products containing microorganisms in the latest XML dump of the PSMV
+title: Statistics on products containing microorganisms in the latest XML dump of the SRPPP
 author: Johannes Ranke
 date: Last change 04 June 2024 (rebuilt `r Sys.Date()`)
 output:
@@ -7,7 +7,7 @@ output:
     toc: true
     code_folding: hide
 vignette: >
-  %\VignetteIndexEntry{Statistics on products containing microorganisms in the latest XML dump of the PSMV}
+  %\VignetteIndexEntry{Statistics on products containing microorganisms in the latest XML dump of the SRPPP}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -15,13 +15,13 @@ vignette: >
 ```{r setup, include = TRUE, message = FALSE}
 knitr::opts_chunk$set(tidy = FALSE, cache = FALSE)
 options(knitr.kable.NA = '')
-library(psmv)
+library(srppp)
 library(dplyr)
 library(knitr)
 ```
 
-```{r psmv, cache = TRUE}
-psmv <- psmv_dm(psmv_xml_url)
+```{r srppp, cache = TRUE}
+srppp <- srppp_dm(srppp_xml_url)
 ```
 
 ## Products in microorganism categories
@@ -30,8 +30,8 @@ The following list was used to identify product categories containing
 microorganisms.
 
 ```{r warning = FALSE}
-psmv$products |>
-  left_join(psmv$product_categories, by = "wNbr") |>
+srppp$products |>
+  left_join(srppp$product_categories, by = "wNbr") |>
   group_by(category_de) |>
   summarise(n = n()) |>
   kable()
@@ -51,8 +51,8 @@ kable(data.frame(Category = microorganism_categories))
 The corresponding products are shown below.
 
 ```{r}
-products_in_microorganism_categories <- psmv$products |>
-  left_join(psmv$product_categories, by = "wNbr") |>
+products_in_microorganism_categories <- srppp$products |>
+  left_join(srppp$product_categories, by = "wNbr") |>
   filter(category_de %in% microorganism_categories) |>
   select(wNbr, name, category_de) |>
   arrange(wNbr)
@@ -66,21 +66,21 @@ The following lists of active substances in insecticides and fungicides were
 used to establish filter criteria active substances that are microorganisms.
 
 ```{r}
-psmv$products |>
-  left_join(psmv$product_categories, by = "wNbr") |>
+srppp$products |>
+  left_join(srppp$product_categories, by = "wNbr") |>
   filter(category_de == "Insektizid") |>
-  left_join(psmv$ingredients, by = "pNbr", relationship = "many-to-many") |>
-  left_join(psmv$substances, by = "pk") |>
+  left_join(srppp$ingredients, by = "pNbr", relationship = "many-to-many") |>
+  left_join(srppp$substances, by = "pk") |>
   select(substance_de) |>
   unique() |>
   arrange(substance_de) |>
   kable()
 
-psmv$products |>
-  left_join(psmv$product_categories, by = "wNbr") |>
+srppp$products |>
+  left_join(srppp$product_categories, by = "wNbr") |>
   filter(category_de == "Fungizid") |>
-  left_join(psmv$ingredients, by = "pNbr", relationship = "many-to-many") |>
-  left_join(psmv$substances, by = "pk") |>
+  left_join(srppp$ingredients, by = "pNbr", relationship = "many-to-many") |>
+  left_join(srppp$substances, by = "pk") |>
   select(substance_de) |>
   unique() |>
   arrange(substance_de) |>
@@ -104,7 +104,7 @@ This results in the following list of active ingredients.
 
 ```{r}
 microorganism_regexp <- paste(microorganism_genus_names, collapse = "|")
-microorganism_ingredients <- psmv$substances |>
+microorganism_ingredients <- srppp$substances |>
   filter(grepl(microorganism_regexp, substance_de)) |>
   select(pk, substance_de)
 kable(microorganism_ingredients)
@@ -114,11 +114,11 @@ kable(microorganism_ingredients)
 The following products contain one of these active ingredients.
 
 ```{r}
-additional_products_containing_microorganisms <- psmv$products |>
-  left_join(psmv$ingredients, by = "pNbr", relationship = "many-to-many") |>
+additional_products_containing_microorganisms <- srppp$products |>
+  left_join(srppp$ingredients, by = "pNbr", relationship = "many-to-many") |>
   filter(pk %in% microorganism_ingredients$pk) |>
   select(-pk) |>
-  left_join(psmv$product_categories, by = "wNbr") |> 
+  left_join(srppp$product_categories, by = "wNbr") |> 
   select(wNbr, name, category_de) |>
   arrange(wNbr)
 n_additional <- nrow(additional_products_containing_microorganisms)
@@ -127,7 +127,7 @@ kable(additional_products_containing_microorganisms)
 
 ## Summary
 
-In summary, out of `r nrow(psmv$products)` products, there are
+In summary, out of `r nrow(srppp$products)` products, there are
 `r n_in_categories` in the microorganism categories
 as shown above, and
 `r n_additional` products in the

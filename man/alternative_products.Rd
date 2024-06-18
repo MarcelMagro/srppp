@@ -5,7 +5,7 @@
 \title{Find alternative products for all products containing certain active substances}
 \usage{
 alternative_products(
-  psmv,
+  srppp,
   active_ingredients,
   details = FALSE,
   missing = FALSE,
@@ -14,10 +14,10 @@ alternative_products(
 )
 }
 \arguments{
-\item{psmv}{A \link{psmv_dm} object.}
+\item{srppp}{A \link{srppp_dm} object.}
 
 \item{active_ingredients}{Character vector of active ingredient names that will be
-matched against the column 'substances_de' in the psmv table 'substances'.}
+matched against the column 'substances_de' in the srppp table 'substances'.}
 
 \item{details}{Should a table of alternative uses with 'wNbr' 'use_nr' be returned?}
 
@@ -45,17 +45,17 @@ A use is defined as a combination of an application area, a crop
 }
 \examples{
 \dontrun{
-psmv_cur <- psmv_dm()
+srppp_cur <- srppp_dm()
 
 actives_de <- c("Lambda-Cyhalothrin", "Deltamethrin")
 
-alternative_products(psmv_cur, actives_de)
-alternative_products(psmv_cur, actives_de, missing = TRUE)
-alternative_products(psmv_cur, actives_de, details = TRUE)
-alternative_products(psmv_cur, actives_de, list = TRUE)
+alternative_products(srppp_cur, actives_de)
+alternative_products(srppp_cur, actives_de, missing = TRUE)
+alternative_products(srppp_cur, actives_de, details = TRUE)
+alternative_products(srppp_cur, actives_de, list = TRUE)
 
 # Example in Italian
 actives_it <- c("Lambda-Cialotrina", "Deltametrina")
-alternative_products(psmv_cur, actives_it, lang = "it")
+alternative_products(srppp_cur, actives_it, lang = "it")
 }
 }

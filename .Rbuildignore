@@ -9,7 +9,7 @@
 ^docs
 ^log
 ^GNUmakefile$
-^psmv.rda$
-^psmv_.*\.tar\.gz
-^psmv.Rcheck
+^.*.rda$
+^.*_.*\.tar\.gz
+^.*.Rcheck
 ^vignettes/.*_cache$

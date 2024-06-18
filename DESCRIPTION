@@ -1,8 +1,8 @@
-Package: psmv
+Package: srppp
 Type: Package
 Title: The Swiss Register of Plant Protection Products as an R Package
-Version: 0.3.3
-Date: 2024-06-17
+Version: 0.3.4
+Date: 2024-06-18
 Authors@R: c(
   person("Marcel", "Mathis", role = "ctb",
     email = "marcel.mathis@agroscope.admin.ch"),
@@ -22,7 +22,7 @@ Depends: R (>= 4.1.0)
 Imports: xml2, tibble, stringr, dplyr, dm, tidyr, cli
 Suggests: knitr, rmarkdown, here, DiagrammeR,
   testthat (>= 3.0.0), parallel
-BugReports: https://gitlab.agsad.admin.ch/psmwb/psmv/issues
+BugReports: https://gitlab.agsad.admin.ch/psmwb/srppp/issues
 License: GPL
 LazyData: yes
 LazyDataCompression: xz

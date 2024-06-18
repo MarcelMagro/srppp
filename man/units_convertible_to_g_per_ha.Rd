@@ -14,7 +14,7 @@ units_convertible_to_g_per_ha
 Product application rate units convertible to grams active substance per hectare
 }
 \examples{
-library(psmv)
+library(srppp)
 library(dplyr)
 # These are the convertible units
 units_convertible_to_g_per_ha
