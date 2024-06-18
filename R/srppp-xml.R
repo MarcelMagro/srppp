@@ -90,7 +90,7 @@ srppp_xml_get_products <- function(srppp_xml = srppp_xml_get(), verbose = TRUE,
     unlist() |>
     matrix(ncol = 7, byrow = TRUE,
       dimnames = list(NULL, product_attribute_names)) |>
-    tibble::as_tibble() |>
+    as_tibble() |>
     mutate(wGrp = as.integer(gsub("-.*$", "", wNbr)),
       .before = wNbr) |>
     group_by(wGrp) |>
@@ -100,7 +100,7 @@ srppp_xml_get_products <- function(srppp_xml = srppp_xml_get(), verbose = TRUE,
     tidyr::fill(pNbr) |>
     ungroup() |>
     arrange(wNbr, .by_group = TRUE) |>
-    select(pNbr, wNbr, name, exhaustionDeadline, soldoutDeadline,
+    select(wNbr, name, pNbr, exhaustionDeadline, soldoutDeadline,
       isSalePermission, terminationReason)
 
   dup_index <- which(duplicated(products$wNbr))
@@ -178,7 +178,7 @@ srppp_xml_get_parallel_imports <- function(srppp_xml = srppp_xml_get())
     unlist() |>
     matrix(ncol = 8, byrow = TRUE,
       dimnames = list(NULL, pi_attribute_names)) |>
-    tibble::as_tibble() |>
+    as_tibble() |>
     arrange(wNbr)
 
   ph_nodes <- xml_find_all(srppp_xml,
@@ -190,7 +190,7 @@ srppp_xml_get_parallel_imports <- function(srppp_xml = srppp_xml_get())
     c(pi_id, ph_key)
   }))
   colnames(ph_key_matrix) <- c("id", "permission_holder_key")
-  ph_keys <- tibble::as_tibble(ph_key_matrix)
+  ph_keys <- as_tibble(ph_key_matrix)
 
   # Discard the second permission holder
   # For example, in the XML file from 2019-03-05, the Parallelimport F-6146
@@ -221,7 +221,7 @@ srppp_xml_get_substances <- function(srppp_xml = srppp_xml_get()) {
   }))
 
   colnames(sub_desc) <- c("pk", "iupac", "substance_de", "substance_fr", "substance_it", "substance_en", "substance_lt")
-  ret <- tibble::as_tibble(sub_desc) |>
+  ret <- as_tibble(sub_desc) |>
     dplyr::mutate(pk = as.integer(pk)) |>
     dplyr::arrange(pk)
 
@@ -254,7 +254,7 @@ srppp_xml_get_ingredients <- function(srppp_xml = srppp_xml_get())
   # As the contents of additives are confidential, we remove them to address cases
   # were they were accidentally included in the XML dump.
   ingredients <- t(sapply(ingredient_nodeset, get_ingredient_map)) |>
-    tibble::as_tibble() |>
+    as_tibble() |>
     mutate(percent = if_else(
       type == "ADDITIVE_TO_DECLARE", "", percent)) |>
     mutate(g_per_L = if_else(
@@ -265,7 +265,7 @@ srppp_xml_get_ingredients <- function(srppp_xml = srppp_xml_get())
   ingredient_descriptions <- srppp_xml |>
     xml_find_all(paste0("MetaData[@name='IngredientAdditionalText']/Detail")) |>
     sapply(get_descriptions, code = FALSE) |> t() |>
-    tibble::as_tibble() |>
+    as_tibble() |>
     rename(ingredient_de = de, ingredient_fr = fr) |>
     rename(ingredient_it = it, ingredient_en = en) |>
     mutate(desc_pk = as.integer(desc_pk)) |>
@@ -299,7 +299,7 @@ srppp_xml_get_ingredients <- function(srppp_xml = srppp_xml_get())
 srppp_xml_define_use_numbers <- function(srppp_xml = srppp_xml_get()) {
   use_nodeset <- xml_find_all(srppp_xml, "Products/Product/ProductInformation/Indication")
 
-  uses <- tibble::tibble(wNbr = sapply(use_nodeset, get_grandparent_wNbr)) |>
+  uses <- tibble(wNbr = sapply(use_nodeset, get_grandparent_wNbr)) |>
     group_by(wNbr) |>
     mutate(use_nr = sequence(rle(wNbr)$length)) # https://stackoverflow.com/a/46613159
 
@@ -365,13 +365,13 @@ srppp_xml_get_uses <- function(srppp_xml = srppp_xml_get()) {
     return(ret)
   }
   time_units <- t(sapply(time_units_nodeset, get_time_units)) |>
-    tibble::as_tibble() |>
+    as_tibble() |>
     mutate_at(c("use_nr", "time_units_pk"), as.integer)
 
   time_unit_descriptions <- srppp_xml |>
     xml_find_all(paste0("MetaData[@name='TimeMeasure']/Detail")) |>
     sapply(get_descriptions, code = FALSE) |> t() |>
-    tibble::as_tibble() |>
+    as_tibble() |>
     rename(time_units_de = de, time_units_fr = fr) |>
     rename(time_units_it = it, time_units_en = en) |>
     rename(time_units_pk = desc_pk) |>
@@ -379,7 +379,7 @@ srppp_xml_get_uses <- function(srppp_xml = srppp_xml_get()) {
     arrange(time_units_pk)
 
   uses <- t(sapply(use_nodeset, get_use)) |>
-    tibble::as_tibble() |>
+    as_tibble() |>
     mutate_at(c("min_dosage", "max_dosage", "min_rate", "max_rate"), as.numeric) |>
     mutate_at(c("waiting_period", "use_nr", "units_pk"), as.integer) |>
     select(wNbr, use_nr, min_dosage, max_dosage, waiting_period, min_rate, max_rate, units_pk) |>
@@ -420,18 +420,21 @@ srppp_dm <- function(from = srppp_xml_url, remove_duplicates = TRUE) {
   # Tables of products and associated information
   # Duplicates were already removed from the XML, if requested
   products <- srppp_xml_get_products(srppp_xml, remove_duplicates = remove_duplicates)
+  pNbrs <- tibble(pNbr = as.integer(unique(products$pNbr))) |>
+    arrange(pNbr)
+
   parallel_imports <- srppp_xml_get_parallel_imports(srppp_xml)
 
   product_information_table <- function(srppp_xml, tag_name, prefix = tag_name, code = FALSE) {
     descriptions <- description_table(srppp_xml, tag_name, code = code)
 
     if (identical(descriptions, NA)) {
-      ret <- tibble::tibble(wNbr = character(0))
+      ret <- tibble(wNbr = character(0))
     } else {
       product_information_nodes <- xml_find_all(srppp_xml,
         paste0("Products/Product/ProductInformation/", tag_name))
 
-      ret <- tibble::tibble(
+      ret <- tibble(
           wNbr = sapply(product_information_nodes, get_grandparent_wNbr),
           desc_pk = as.integer(xml_attr(product_information_nodes, "primaryKey"))
         ) |>
@@ -470,7 +473,7 @@ srppp_dm <- function(from = srppp_xml_url, remove_duplicates = TRUE) {
     indication_information_nodes <- xml_find_all(srppp_xml,
       paste0("Products/Product/ProductInformation/Indication/", tag_name))
 
-    ret <- tibble::tibble(
+    ret <- tibble(
       wNbr = sapply(indication_information_nodes, get_great_grandparent_wNbr),
       use_nr = sapply(indication_information_nodes, get_use_nr),
       desc_pk = xml_attr(indication_information_nodes, "primaryKey")) |>
@@ -561,7 +564,7 @@ srppp_dm <- function(from = srppp_xml_url, remove_duplicates = TRUE) {
     select(-desc_pk) |>
     arrange(wNbr, use_nr)
 
-  srppp_dm <- dm(products,
+  srppp_dm <- dm(products, pNbrs,
     product_categories, formulation_codes,
     parallel_imports,
     danger_symbols, CodeS, CodeR, signal_words,
@@ -572,16 +575,18 @@ srppp_dm <- function(from = srppp_xml_url, remove_duplicates = TRUE) {
     culture_forms,
     cultures, pests, obligations) |>
     dm_add_pk(products, wNbr) |>
+    dm_add_pk(pNbrs, pNbr) |>
     dm_add_pk(parallel_imports, id) |>
     dm_add_pk(substances, pk) |>
     dm_add_pk(uses, c(wNbr, use_nr)) |>
+    dm_add_fk(products, pNbr, pNbrs) |>
     dm_add_fk(product_categories, wNbr, products) |>
     dm_add_fk(formulation_codes, wNbr, products) |>
     dm_add_fk(danger_symbols, wNbr, products) |>
     dm_add_fk(CodeS, wNbr, products) |>
     dm_add_fk(CodeR, wNbr, products) |>
     dm_add_fk(signal_words, wNbr, products) |>
-    dm_add_fk(ingredients, pNbr, products) |>
+    dm_add_fk(ingredients, pNbr, pNbrs) |>
     dm_add_fk(ingredients, pk, substances) |>
     dm_add_fk(uses, wNbr, products) |>
     dm_add_fk(application_comments, c(wNbr, use_nr), uses) |>
@@ -662,7 +667,7 @@ description_table <- function(srppp_xml, tag_name, code = FALSE, latin = FALSE) 
   if (length(nodes) > 0) {
     ret <- nodes |>
       sapply(get_descriptions, code = code, latin = latin) |> t() |>
-      tibble::as_tibble() |>
+      as_tibble() |>
       mutate(desc_pk = as.integer(desc_pk)) |>
       arrange(desc_pk)
   } else {

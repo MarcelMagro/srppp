@@ -27,6 +27,7 @@
 #' @importFrom dplyr summarise
 #' @importFrom dplyr ungroup
 #' @importFrom tibble as_tibble
+#' @importFrom tibble tibble
 #' @importFrom utils download.file
 #' @importFrom xml2 read_xml
 #' @importFrom xml2 xml_attr

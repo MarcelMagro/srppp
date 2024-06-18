@@ -150,11 +150,8 @@ areas in Switzerland.</p>
 <span class="r-in"><span>    <span class="va">min_dosage</span>, <span class="va">max_dosage</span>, <span class="va">min_rate</span>, <span class="va">max_rate</span>, <span class="va">units_de</span>,</span></span>
 <span class="r-in"><span>    <span class="va">application_area_de</span>,</span></span>
 <span class="r-in"><span>    <span class="va">substance_de</span>, <span class="va">percent</span>, <span class="va">g_per_L</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in map(def$table, ~dm_get_filtered_table(dm, .)):</span> <span style="color: #00BBBB;">ℹ</span> In index: 1.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">Caused by error in `semi_join()`:</span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> Can't join `x$wNbr` with `y$pNbr` due to incompatible types.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> `x$wNbr` is a &lt;character&gt;.</span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> `y$pNbr` is a &lt;integer&gt;.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in left_join(dm_flatten_to_tbl(dm_filter(srppp_cur, substances = (substance_de %in%     c("Halauxifen-methyl", "Kupfer (als Kalkpräparat)"))), uses,     products), srppp_cur$ingredients, by = join_by(wNbr), relationship = "many-to-many"):</span> Join columns in `y` must be present in the data.</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">✖</span> Problem with `wNbr`.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">application_rate_g_per_ha</span><span class="op">(</span><span class="va">product_uses_with_ingredients</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">name</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Cerelex"</span>, <span class="st">"Pixxaro EC"</span>, <span class="st">"Bordeaux S"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span></span>
