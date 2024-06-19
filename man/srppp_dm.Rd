@@ -56,15 +56,13 @@ print(boxer_uses)
 boxer_uses |>
   filter(use_nr == 1) |>
   left_join(sr$cultures, join_by(wNbr, use_nr)) |>
-  select(use_nr, min_rate, units_de, waiting_period, time_units_de,
-    application_area_de, culture_de)
+  select(use_nr, culture_de)
 
 # Show target pests for use number 1
 boxer_uses |>
   filter(use_nr == 1) |>
-  left_join(sr$pests) |>
-  select(use_nr, min_rate, units_de, waiting_period, time_units_de,
-    application_area_de, pest_de)
+  left_join(sr$pests, join_by(wNbr, use_nr)) |>
+  select(use_nr, pest_de)
 
 # Show obligations for use number 1
 boxer_uses |>
