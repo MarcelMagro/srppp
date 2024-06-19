@@ -31,7 +31,7 @@ install: $(TGZ)
 quickinstall: $(TGZVNR)
 	"$(RBIN)/R" CMD INSTALL $(TGZVNR)
 
-check: $(TGZ)
+check: roxy $(TGZ)
 	_R_CHECK_CRAN_INCOMING_REMOTE_=false "$(RBIN)/R" CMD check --as-cran --no-tests $(TGZ) 2>&1 | tee log/check.log
 
 quickcheck: $(TGZVNR)
@@ -39,10 +39,10 @@ quickcheck: $(TGZVNR)
 	_R_CHECK_CRAN_INCOMING_REMOTE_=false "$(RBIN)/R" CMD check --no-tests --no-build-vignettes --no-vignettes $(TGZ)
 	mv $(TGZ) $(TGZVNR)
 
-pd:
+pd: roxy
 	Rscript -e 'pkgdown::build_site(lazy = TRUE, run_dont_run = TRUE)'
 
-pd_all:
+pd_all: roxy
 	Rscript -e 'pkgdown::build_site(lazy = FALSE, run_dont_run = TRUE)'
 
 test: 

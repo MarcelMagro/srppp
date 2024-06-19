@@ -26,16 +26,57 @@ pointing to primary keys, i.e. with referential integrity.
 Create a dm object from an XML version of the PSMV
 }
 \examples{
+library(dplyr, warn.conflicts = FALSE)
+library(dm, warn.conflicts = FALSE)
+
+sr <- srppp_dm()
+dm_examine_constraints(sr)
 \dontrun{
-library(dm)
+dm_draw(sr)
 
-srppp_cur <- srppp_dm()
-dm_examine_constraints(srppp_cur)
-dm_draw(srppp_cur)
-
-# Show some information for products named 'Boxer'
-srppp_cur |>
-  dm_filter(products = (name == "Boxer")) |>
-  dm_nrow()
 }
+
+# Show ingredients for products named 'Boxer'
+sr$products |>
+  filter(name == "Boxer") |>
+  left_join(sr$ingredients) |>
+  left_join(sr$substances) |>
+  select(wNbr, name, pNbr, isSalePermission, substance_de, g_per_L)
+
+# Show authorised uses of the original product
+boxer_uses <- sr$products |>
+  filter(name == "Boxer", isSalePermission == "false") |>
+  left_join(sr$uses) |>
+  select(wNbr, name, use_nr,
+    min_dosage, max_dosage, min_rate, max_rate, units_de,
+    waiting_period, time_units_de, application_area_de)
+print(boxer_uses)
+
+# Show crop for use number 1
+boxer_uses |>
+  filter(use_nr == 1) |>
+  left_join(sr$cultures, join_by(wNbr, use_nr)) |>
+  select(use_nr, min_rate, units_de, waiting_period, time_units_de,
+    application_area_de, culture_de)
+
+# Show target pests for use number 1
+boxer_uses |>
+  filter(use_nr == 1) |>
+  left_join(sr$pests) |>
+  select(use_nr, min_rate, units_de, waiting_period, time_units_de,
+    application_area_de, pest_de)
+
+# Show obligations for use number 1
+boxer_uses |>
+  filter(use_nr == 1) |>
+  left_join(sr$obligations, join_by(wNbr, use_nr)) |>
+  select(use_nr, obligation_de) |>
+  knitr::kable() |>
+  print()
+
+# Show application comments for use number 1
+boxer_uses |>
+  filter(use_nr == 1) |>
+  left_join(sr$application_comments, join_by(wNbr, use_nr)) |>
+  select(use_nr, application_comment_de)
 }
