@@ -30,15 +30,15 @@
 #' @examples
 #' \dontrun{
 #' library(srppp)
-#' library(dplyr)
-#' library(dm)
+#' library(dplyr, warn.conflicts = FALSE)
+#' library(dm, warn.conflicts = FALSE)
 #' srppp_cur <- srppp_dm()
 #'
 #' product_uses_with_ingredients <- srppp_cur |>
 #'   dm_filter(substances =
 #'     (substance_de %in% c("Halauxifen-methyl", "Kupfer (als Kalkpr\u00E4parat)"))) |>
 #'   dm_flatten_to_tbl(uses, products) |>
-#'   left_join(srppp_cur$ingredients, by = join_by(wNbr),
+#'   left_join(srppp_cur$ingredients, by = join_by(pNbr),
 #'     relationship = "many-to-many") |>
 #'   left_join(srppp_cur$substances, by = join_by(pk)) |>
 #'   select(wNbr, name, use_nr,
