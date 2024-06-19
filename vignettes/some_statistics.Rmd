@@ -1,0 +1,61 @@
+---
+title: Some statistics on products and their ingredients in the Swiss Register of Plant Protection Products
+author: Johannes Ranke
+date: Last change 19 June 2024 (rebuilt `r Sys.Date()`)
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    code_folding: hide
+vignette: >
+  %\VignetteIndexEntry{Some statistics on products and their ingredients in the Swiss Register of Plant Protection Products}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = TRUE, message = FALSE}
+knitr::opts_chunk$set(tidy = FALSE, cache = FALSE)
+options(knitr.kable.NA = '')
+library(srppp)
+library(dplyr, warn.conflicts = FALSE)
+library(knitr)
+```
+
+```{r srppp, cache = TRUE}
+srppp <- srppp_dm(srppp_xml_url)
+```
+
+```{r}
+n_wNbrs <- nrow(srppp$products)
+n_pNbrs <- length(unique(srppp$products$pNbr))
+```
+
+At the build time of this vignette, there are `r n_wNbrs` product registrations
+for `r n_pNbrs` different product types in the Swiss Register of Plant 
+Protection Products (SRPPP) as published on the website of the Federal Food 
+Safety and Veterinary Office.
+
+The table below shows how many different ingredients of different ingredient
+types are registered.
+
+```{r ingredient_types}
+srppp$ingredients |> 
+  select(pk, type) |> 
+  unique() |> 
+  group_by(type) |> 
+  summarize(n = n())
+```
+
+The number of product types (different P-Numbers) containing a specific safener 
+or a synergist are listed below.
+
+```{r number_of_products_with_synergists_or_safeners}
+srppp$ingredients |> 
+  select(pNbr, pk, type) |> 
+  filter(type %in% c("SYNERGIST", "SAFENER")) |> 
+  left_join(srppp$substances, join_by(pk)) |> 
+  select(substance_de, type, pNbr) |> 
+  group_by(type, substance_de) |> 
+  summarize(n = n(), .groups = "drop_last") |> 
+  select(type, substance_de, n) |> 
+  arrange(type, substance_de)
+```

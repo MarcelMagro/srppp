@@ -2,6 +2,7 @@ pandoc: 3.1.11
 pkgdown: 2.0.9
 pkgdown_sha: ~
 articles:
+  some_statistics: some_statistics.html
   srppp_products_with_MO: srppp_products_with_MO.html
-last_built: 2024-06-19T09:10Z
+last_built: 2024-06-19T11:11Z
 
