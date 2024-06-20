@@ -2,7 +2,7 @@
 % Please edit documentation in R/srppp-xml.R
 \name{srppp_xml_get_substances}
 \alias{srppp_xml_get_substances}
-\title{Get substances from an XML version of the PSMV}
+\title{Get substances from an XML version of the Swiss Register of Plant Protection Products}
 \usage{
 srppp_xml_get_substances(srppp_xml = srppp_xml_get())
 }
@@ -10,7 +10,7 @@ srppp_xml_get_substances(srppp_xml = srppp_xml_get())
 \item{srppp_xml}{An object as returned by 'srppp_xml_get'}
 }
 \description{
-Get substances from an XML version of the PSMV
+Get substances from an XML version of the Swiss Register of Plant Protection Products
 }
 \examples{
 srppp_xml_get_substances()

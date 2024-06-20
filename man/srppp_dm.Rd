@@ -3,7 +3,7 @@
 \name{srppp_dm}
 \alias{srppp_dm}
 \alias{print.srppp_dm}
-\title{Create a dm object from an XML version of the PSMV}
+\title{Create a dm object from an XML version of the Swiss Register of Plant Protection Products}
 \usage{
 srppp_dm(from = srppp_xml_url, remove_duplicates = TRUE)
 
@@ -23,7 +23,7 @@ A \link{dm} object with tables linked by foreign keys
 pointing to primary keys, i.e. with referential integrity.
 }
 \description{
-Create a dm object from an XML version of the PSMV
+Create a dm object from an XML version of the Swiss Register of Plant Protection Products
 }
 \examples{
 library(dplyr, warn.conflicts = FALSE)

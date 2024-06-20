@@ -57,12 +57,15 @@ Files ‘README.md’ or ‘NEWS.md’ cannot be checked without ‘pandoc’ be
 * checking for unstated dependencies in examples ... OK
 * checking installed files from ‘inst/doc’ ... OK
 * checking files in ‘vignettes’ ... OK
-* checking examples ... [12s/15s] OK
+* checking examples ... [25s/32s] NOTE
+Examples with CPU (user + system) or elapsed time > 5s
+           user system elapsed
+srppp_dm 13.354  0.656  15.729
 * checking for unstated dependencies in ‘tests’ ... OK
 * checking tests ... SKIPPED
 * checking for unstated dependencies in vignettes ... OK
 * checking package vignettes ... OK
-* checking re-building of vignette outputs ... [15s/15s] OK
+* checking re-building of vignette outputs ... [30s/30s] OK
 * checking PDF version of manual ... OK
 * checking HTML version of manual ... NOTE
 Skipping checking HTML validation: no command 'tidy' found
@@ -70,7 +73,7 @@ Skipping checking HTML validation: no command 'tidy' found
 * checking for detritus in the temp directory ... OK
 * DONE
 
-Status: 2 NOTEs
+Status: 3 NOTEs
 See
   ‘/home/agsad.admin.ch/f80868656/projects/srppp/srppp.Rcheck/00check.log’
 for details.

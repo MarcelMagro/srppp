@@ -2,7 +2,7 @@
 % Please edit documentation in R/srppp-xml.R
 \name{srppp_xml_get_uses}
 \alias{srppp_xml_get_uses}
-\title{Get uses ('indications') for all products described in an XML version of the PSMV}
+\title{Get uses ('indications') for all products described in an XML version of the Swiss Register of Plant Protection Products}
 \usage{
 srppp_xml_get_uses(srppp_xml = srppp_xml_get())
 }
@@ -11,7 +11,7 @@ srppp_xml_get_uses(srppp_xml = srppp_xml_get())
 defined by \link{srppp_xml_define_use_numbers}}
 }
 \description{
-Get uses ('indications') for all products described in an XML version of the PSMV
+Get uses ('indications') for all products described in an XML version of the Swiss Register of Plant Protection Products
 }
 \examples{
 srppp_xml <- srppp_xml_get()

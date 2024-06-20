@@ -7,7 +7,7 @@ utils::globalVariables(c("id", "name", "pk", "wNbr", "wGrp", "pNbr", "use_nr",
   "units_pk", "time_units_pk",
   "type", "g_per_L", "percent"))
 
-#' Read an XML version of the PSMV
+#' Read an XML version of the Swiss Register of Plant Protection Products
 #'
 #' @param from A specification of the way to retrieve the XML
 #' @param \dots Unused argument introduced to facilitate future extensions
@@ -21,7 +21,7 @@ srppp_xml_get <- function(from, ...)
 #' @rdname srppp_xml_get
 #' @export
 #' @examples
-#' # The current PSMV as available from the FOAG website
+#' # The current SRPPP as available from the FOAG website
 #' srppp_cur <- srppp_xml_get()
 srppp_xml_get.NULL <- function(from, ...)
 {
@@ -35,7 +35,7 @@ srppp_xml_get.NULL <- function(from, ...)
 #' @rdname srppp_xml_get
 #' @export
 #' @examples
-#' # The current PSMV as available from the FOAG website
+#' # The current SRPPP as available from the FOAG website
 #' srppp_cur <- srppp_xml_get(srppp_xml_url)
 srppp_xml_get.character <- function(from, ...)
 {
@@ -46,7 +46,7 @@ srppp_xml_get.character <- function(from, ...)
 }
 
 #' @rdname srppp_xml_get
-#' @param path A path to a zipped PSMV XML file
+#' @param path A path to a zipped SRPPP XML file
 #' @export
 srppp_xml_get_from_path <- function(path, from) {
   zip_contents <- utils::unzip(path, list = TRUE)
@@ -59,7 +59,7 @@ srppp_xml_get_from_path <- function(path, from) {
   return(ret)
 }
 
-#' Get Products from an XML version of the PSMV
+#' Get Products from an XML version of the Swiss Register of Plant Protection Products
 #'
 #' @param srppp_xml An object as returned by 'srppp_xml_get'
 #' @param verbose Should we give some feedback?
@@ -160,7 +160,7 @@ srppp_xml_get_products <- function(srppp_xml = srppp_xml_get(), verbose = TRUE,
   return(products)
 }
 
-#' Get Parallel Imports from an XML version of the PSMV
+#' Get Parallel Imports from an XML version of the Swiss Register of Plant Protection Products
 #'
 #' @inheritParams srppp_xml_get_products
 #' @return A [tibble] with a row for each parallel import section
@@ -203,7 +203,7 @@ srppp_xml_get_parallel_imports <- function(srppp_xml = srppp_xml_get())
   return(retval)
 }
 
-#' Get substances from an XML version of the PSMV
+#' Get substances from an XML version of the Swiss Register of Plant Protection Products
 #'
 #' @param srppp_xml An object as returned by 'srppp_xml_get'
 #' @export
@@ -228,7 +228,7 @@ srppp_xml_get_substances <- function(srppp_xml = srppp_xml_get()) {
   return(ret)
 }
 
-#' Get ingredients for all products described in an XML version of the PSMV
+#' Get ingredients for all products described in an XML version of the Swiss Register of Plant Protection Products
 #'
 #' @param srppp_xml An object as returned by 'srppp_xml_get'
 #' @export
@@ -289,7 +289,7 @@ srppp_xml_get_ingredients <- function(srppp_xml = srppp_xml_get())
   return(ret_corrected)
 }
 
-#' Define use identification numbers in a PSMV read in from an XML file
+#' Define use identification numbers in an SRPPP read in from an XML file
 #'
 #' @param srppp_xml An object as returned by 'srppp_xml_get'
 #' @return An srppp_xml object with use_nr added as an attribute of 'Indication' nodes.
@@ -308,7 +308,7 @@ srppp_xml_define_use_numbers <- function(srppp_xml = srppp_xml_get()) {
   return(srppp_xml)
 }
 
-#' Get uses ('indications') for all products described in an XML version of the PSMV
+#' Get uses ('indications') for all products described in an XML version of the Swiss Register of Plant Protection Products
 #'
 #' @param srppp_xml An object as returned by [srppp_xml_get] with use numbers
 #' defined by [srppp_xml_define_use_numbers]
@@ -393,7 +393,7 @@ srppp_xml_get_uses <- function(srppp_xml = srppp_xml_get()) {
   return(ret)
 }
 
-#' Create a dm object from an XML version of the PSMV
+#' Create a dm object from an XML version of the Swiss Register of Plant Protection Products
 #'
 #' @inheritParams srppp_xml_get
 #' @param remove_duplicates Should duplicates based on wNbrs be removed?

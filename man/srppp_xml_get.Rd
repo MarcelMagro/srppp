@@ -5,7 +5,7 @@
 \alias{srppp_xml_get.NULL}
 \alias{srppp_xml_get.character}
 \alias{srppp_xml_get_from_path}
-\title{Read an XML version of the PSMV}
+\title{Read an XML version of the Swiss Register of Plant Protection Products}
 \usage{
 srppp_xml_get(from, ...)
 
@@ -20,17 +20,17 @@ srppp_xml_get_from_path(path, from)
 
 \item{\dots}{Unused argument introduced to facilitate future extensions}
 
-\item{path}{A path to a zipped PSMV XML file}
+\item{path}{A path to a zipped SRPPP XML file}
 }
 \value{
 An object inheriting from 'srppp_xml', 'xml_document', 'xml_node'
 }
 \description{
-Read an XML version of the PSMV
+Read an XML version of the Swiss Register of Plant Protection Products
 }
 \examples{
-# The current PSMV as available from the FOAG website
+# The current SRPPP as available from the FOAG website
 srppp_cur <- srppp_xml_get()
-# The current PSMV as available from the FOAG website
+# The current SRPPP as available from the FOAG website
 srppp_cur <- srppp_xml_get(srppp_xml_url)
 }

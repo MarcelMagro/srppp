@@ -2,7 +2,7 @@
 % Please edit documentation in R/srppp-xml.R
 \name{srppp_xml_get_products}
 \alias{srppp_xml_get_products}
-\title{Get Products from an XML version of the PSMV}
+\title{Get Products from an XML version of the Swiss Register of Plant Protection Products}
 \usage{
 srppp_xml_get_products(
   srppp_xml = srppp_xml_get(),
@@ -32,7 +32,7 @@ also returned, containing duplicated W-Numbers, if applicable,
 or NULL.
 }
 \description{
-Get Products from an XML version of the PSMV
+Get Products from an XML version of the Swiss Register of Plant Protection Products
 }
 \examples{
 # Get current list of products

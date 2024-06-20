@@ -2,7 +2,7 @@
 % Please edit documentation in R/srppp-xml.R
 \name{srppp_xml_get_parallel_imports}
 \alias{srppp_xml_get_parallel_imports}
-\title{Get Parallel Imports from an XML version of the PSMV}
+\title{Get Parallel Imports from an XML version of the Swiss Register of Plant Protection Products}
 \usage{
 srppp_xml_get_parallel_imports(srppp_xml = srppp_xml_get())
 }
@@ -14,7 +14,7 @@ A \link{tibble} with a row for each parallel import section
 in the XML file.
 }
 \description{
-Get Parallel Imports from an XML version of the PSMV
+Get Parallel Imports from an XML version of the Swiss Register of Plant Protection Products
 }
 \examples{
 # Get current list of parallel_imports

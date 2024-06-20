@@ -2,7 +2,7 @@
 % Please edit documentation in R/srppp-xml.R
 \name{srppp_xml_define_use_numbers}
 \alias{srppp_xml_define_use_numbers}
-\title{Define use identification numbers in a PSMV read in from an XML file}
+\title{Define use identification numbers in an SRPPP read in from an XML file}
 \usage{
 srppp_xml_define_use_numbers(srppp_xml = srppp_xml_get())
 }
@@ -13,7 +13,7 @@ srppp_xml_define_use_numbers(srppp_xml = srppp_xml_get())
 An srppp_xml object with use_nr added as an attribute of 'Indication' nodes.
 }
 \description{
-Define use identification numbers in a PSMV read in from an XML file
+Define use identification numbers in an SRPPP read in from an XML file
 }
 \examples{
 srppp_xml_define_use_numbers()
