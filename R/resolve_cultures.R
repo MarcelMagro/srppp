@@ -24,8 +24,9 @@
 #'   corrections will be applied: In the `culture_tree`, and consequently in the
 #'   `culture_leaf_df`, there are variations in the naming of aggregated culture
 #'   groups with "allg.". For example, both "Obstbau allg." and "allg. Obstbau"
-#'   exist. However, information about the leaf nodes is only available in the
-#'   culture groups that start with "allg. ...". This will be adjusted.
+#'   exist. The information about the leaf nodes is only available in one of these terms. 
+#'   Therefore, the information from the term containing the leaf nodes is transferred 
+#'   to the corresponding "allg. ..." term.
 #' @return
 #' A data frame or tibble with the same structure as the input
 #'   `dataset`, but with an additional column `"leaf_culture_de"` that contains
